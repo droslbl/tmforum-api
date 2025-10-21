@@ -47,6 +47,7 @@ public class QuoteApiController extends AbstractApiController<Quote> implements 
 						IdHelper.toNgsiLd(UUID.randomUUID().toString(), Quote.TYPE_QUOTE)));
 		quote.setQuoteDate(clock.instant());
 		quote.setState(QuoteState.IN_PROGRESS);
+		quote.setLastUpdate(clock.instant());
 
 		if (quote.getQuoteItem() == null || quote.getQuoteItem().isEmpty()) {
 			throw new TmForumException("Quotes need at least one QuoteItem.", TmForumExceptionReason.INVALID_DATA);
@@ -150,6 +151,7 @@ public class QuoteApiController extends AbstractApiController<Quote> implements 
 		}
 
 		Quote quote = tmForumMapper.map(quoteUpdateVO, id);
+		quote.setLastUpdate(clock.instant());
 
 		// the list is not allowed to be emptied
 		if (Optional.ofNullable(quote.getQuoteItem()).map(List::isEmpty).orElse(false)) {
