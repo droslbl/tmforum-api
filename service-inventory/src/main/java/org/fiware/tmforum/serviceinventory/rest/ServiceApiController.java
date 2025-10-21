@@ -26,17 +26,20 @@ import reactor.core.publisher.Mono;
 
 import java.net.URI;
 import java.util.*;
+import java.time.Clock;
 
 @Slf4j
 @Controller("${general.basepath:/}")
 public class ServiceApiController extends AbstractApiController<Service> implements ServiceApi {
 
     private final TMForumMapper tmForumMapper;
+    private final Clock clock;
 
     public ServiceApiController(QueryParser queryParser, ReferenceValidationService validationService,
-                                TmForumRepository repository, TMForumMapper tmForumMapper, TMForumEventHandler eventHandler) {
+                                TmForumRepository repository, TMForumMapper tmForumMapper, Clock clock, TMForumEventHandler eventHandler) {
         super(queryParser, validationService, repository, eventHandler);
         this.tmForumMapper = tmForumMapper;
+        this.clock = clock;
     }
 
     @Override
@@ -46,6 +49,7 @@ public class ServiceApiController extends AbstractApiController<Service> impleme
                         IdHelper.toNgsiLd(UUID.randomUUID().toString(), Service.TYPE_SERVICE)));
 
         validateInternalRefs(service);
+        service.setLastUpdate(clock.instant());
         
         return create(getCheckingMono(service), Service.class)
                 .map(tmForumMapper::map)
@@ -192,6 +196,7 @@ public class ServiceApiController extends AbstractApiController<Service> impleme
 
         Service service = tmForumMapper.map(serviceUpdateVO, id);
         validateInternalRefs(service);
+        service.setLastUpdate(clock.instant());
 
         return patch(id, service, getCheckingMono(service), Service.class)
                 .map(tmForumMapper::map)

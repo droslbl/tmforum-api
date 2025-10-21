@@ -61,6 +61,10 @@ public class Service extends EntityWithId {
     @Setter(onMethod = @__({@AttributeSetter(value = AttributeType.PROPERTY, targetName = "name")}))
     private String name;
 
+    @Getter(onMethod = @__({@AttributeGetter(value = AttributeType.PROPERTY, targetName = "lastUpdate")}))
+    @Setter(onMethod = @__({@AttributeSetter(value = AttributeType.PROPERTY, targetName = "lastUpdate")}))
+    private Instant lastUpdate;
+
     @Getter(onMethod = @__({@AttributeGetter(value = AttributeType.PROPERTY, targetName = "serviceDate")}))
     @Setter(onMethod = @__({@AttributeSetter(value = AttributeType.PROPERTY, targetName = "serviceDate")}))
     private String serviceDate;
