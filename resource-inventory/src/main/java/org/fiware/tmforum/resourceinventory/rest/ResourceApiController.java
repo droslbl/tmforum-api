@@ -24,18 +24,21 @@ import reactor.core.publisher.Mono;
 
 import java.net.URI;
 import java.util.*;
+import java.time.Clock;
 
 @Slf4j
 @Controller("${general.basepath:/}")
 public class ResourceApiController extends AbstractApiController<Resource> implements ResourceApi {
 
 	private final TMForumMapper tmForumMapper;
+	private final Clock clock;
 
 	public ResourceApiController(QueryParser queryParser, ReferenceValidationService validationService,
 			TmForumRepository resourceInventoryRepository,
-			TMForumMapper tmForumMapper, TMForumEventHandler eventHandler) {
+			TMForumMapper tmForumMapper, Clock clock, TMForumEventHandler eventHandler) {
 		super(queryParser, validationService, resourceInventoryRepository, eventHandler);
 		this.tmForumMapper = tmForumMapper;
+		this.clock = clock;
 	}
 
 	@Override
@@ -44,6 +47,7 @@ public class ResourceApiController extends AbstractApiController<Resource> imple
 				tmForumMapper.map(resourceCreateVO,
 						IdHelper.toNgsiLd(UUID.randomUUID().toString(), Resource.TYPE_RESOURCE)));
 
+		resource.setLastUpdate(clock.instant());
 		validateInternalRefs(resource);
 
 		return create(getCheckingMono(resource), Resource.class)
@@ -193,7 +197,9 @@ public class ResourceApiController extends AbstractApiController<Resource> imple
 		}
 
 		Resource resource = tmForumMapper.map(resourceUpdateVO, id);
+		resource.setLastUpdate(clock.instant());
 		validateInternalRefs(resource);
+
 
 		return patch(id, resource, getCheckingMono(resource), Resource.class)
 				.map(tmForumMapper::map)
