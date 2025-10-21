@@ -24,6 +24,7 @@ import reactor.core.publisher.Mono;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.Clock;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -32,17 +33,21 @@ import java.util.UUID;
 public class UsageController extends AbstractApiController<Usage> implements UsageApi {
 
         private final TMForumMapper tmForumMapper;
+        private final Clock clock;
 
         public UsageController(QueryParser queryParser, ReferenceValidationService validationService, TmForumRepository partyRepository,
-                               TMForumMapper tmForumMapper, TMForumEventHandler eventHandler) {
+                               TMForumMapper tmForumMapper, Clock clock, TMForumEventHandler eventHandler) {
                 super(queryParser, validationService, partyRepository, eventHandler);
                 this.tmForumMapper = tmForumMapper;
+                this.clock = clock;
         }
 
         @Override
         public Mono<HttpResponse<UsageVO>> createUsage(@NonNull UsageCreateVO usageCreateVO) {
                 Usage usage = tmForumMapper.map(tmForumMapper.map(usageCreateVO,
                                 IdHelper.toNgsiLd(UUID.randomUUID().toString(), Usage.TYPE_U)));
+
+                usage.setLastUpdate(clock.instant());
                 return create(getCheckingMono(usage), Usage.class)
                                 .map(tmForumMapper::map)
                                 .map(HttpResponse::created);
@@ -83,6 +88,7 @@ public class UsageController extends AbstractApiController<Usage> implements Usa
                                         TmForumExceptionReason.NOT_FOUND);
                 }
                 Usage ug = tmForumMapper.map(usageUpdateVO, id);
+                ug.setLastUpdate(clock.instant());
 
                 return patch(id, ug, getCheckingMono(ug), Usage.class)
                                 .map(tmForumMapper::map)

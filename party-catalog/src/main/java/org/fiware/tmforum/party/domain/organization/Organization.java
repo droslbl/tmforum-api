@@ -18,6 +18,7 @@ import org.fiware.tmforum.common.domain.TimePeriod;
 
 import java.net.URI;
 import java.util.List;
+import java.time.Instant;
 
 @EqualsAndHashCode(callSuper = true)
 @MappingEnabled(entityType = Organization.TYPE_ORGANIZATION)
@@ -40,6 +41,10 @@ public class Organization extends EntityWithId {
 	@Getter(onMethod = @__({ @AttributeGetter(value = AttributeType.PROPERTY, targetName = "name") }))
 	@Setter(onMethod = @__({ @AttributeSetter(value = AttributeType.PROPERTY, targetName = "name") }))
 	private String name;
+
+	@Getter(onMethod = @__({@AttributeGetter(value = AttributeType.PROPERTY, targetName = "lastUpdate")}))
+	@Setter(onMethod = @__({@AttributeSetter(value = AttributeType.PROPERTY, targetName = "lastUpdate")}))
+	private Instant lastUpdate;
 
 	@Getter(onMethod = @__({ @AttributeGetter(value = AttributeType.PROPERTY, targetName = "nameType") }))
 	@Setter(onMethod = @__({ @AttributeSetter(value = AttributeType.PROPERTY, targetName = "nameType") }))

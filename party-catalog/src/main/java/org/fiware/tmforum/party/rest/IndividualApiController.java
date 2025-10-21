@@ -24,17 +24,20 @@ import reactor.core.publisher.Mono;
 import javax.annotation.Nullable;
 import javax.validation.Valid;
 import java.util.*;
+import java.time.Clock;
 
 @Slf4j
 @Controller("${general.basepath:/}")
 public class IndividualApiController extends AbstractPartyApiController<Individual> implements IndividualApi {
 
 	private final TMForumMapper tmForumMapper;
+	private final Clock clock;
 
 	public IndividualApiController(QueryParser queryParser, ReferenceValidationService validationService, TmForumRepository partyRepository,
-			TMForumMapper tmForumMapper, TMForumEventHandler eventHandler) {
+			TMForumMapper tmForumMapper, Clock clock, TMForumEventHandler eventHandler) {
 		super(queryParser, validationService, partyRepository, eventHandler);
 		this.tmForumMapper = tmForumMapper;
+		this.clock = clock;
 	}
 
 	@Override
@@ -42,6 +45,8 @@ public class IndividualApiController extends AbstractPartyApiController<Individu
 
 		Individual individual = tmForumMapper.map(tmForumMapper.map(individualCreateVO,
 				IdHelper.toNgsiLd(UUID.randomUUID().toString(), Individual.TYPE_INDIVIDUAL)));
+
+		individual.setLastUpdate(clock.instant());
 
 		return create(getCheckingMono(individual), Individual.class)
 				.map(tmForumMapper::map)
@@ -99,6 +104,7 @@ public class IndividualApiController extends AbstractPartyApiController<Individu
 					TmForumExceptionReason.NOT_FOUND);
 		}
 		Individual individual = tmForumMapper.map(individualUpdateVO, id);
+		individual.setLastUpdate(clock.instant());
 
 		return patch(id, individual, getCheckingMono(individual), Individual.class)
 				.map(tmForumMapper::map)

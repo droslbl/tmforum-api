@@ -26,17 +26,20 @@ import reactor.core.publisher.Mono;
 import javax.annotation.Nullable;
 import java.net.URI;
 import java.util.*;
+import java.time.Clock;
 
 @Slf4j
 @Controller("${general.basepath:/}")
 public class OrganizationApiController extends AbstractPartyApiController<Organization> implements OrganizationApi {
 
 	private final TMForumMapper tmForumMapper;
+	private final Clock clock;
 
 	public OrganizationApiController(QueryParser queryParser, TmForumRepository partyRepository, ReferenceValidationService validationService,
-			TMForumMapper tmForumMapper, TMForumEventHandler eventHandler) {
+			TMForumMapper tmForumMapper, Clock clock, TMForumEventHandler eventHandler) {
 		super(queryParser, validationService, partyRepository, eventHandler);
 		this.tmForumMapper = tmForumMapper;
+		this.clock = clock;
 	}
 
 	@Override
@@ -44,6 +47,8 @@ public class OrganizationApiController extends AbstractPartyApiController<Organi
 
 		Organization organization = tmForumMapper.map(tmForumMapper.map(organizationCreateVO,
 				IdHelper.toNgsiLd(UUID.randomUUID().toString(), Organization.TYPE_ORGANIZATION)));
+
+		organization.setLastUpdate(clock.instant());
 
 		return create(getCheckingMono(organization), Organization.class)
 				.map(tmForumMapper::map)
@@ -112,6 +117,7 @@ public class OrganizationApiController extends AbstractPartyApiController<Organi
 					TmForumExceptionReason.NOT_FOUND);
 		}
 		Organization organization = tmForumMapper.map(organizationUpdateVO, id);
+		organization.setLastUpdate(clock.instant());
 
 		return patch(id, organization, getCheckingMono(organization), Organization.class)
 				.map(tmForumMapper::map)

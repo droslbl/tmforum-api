@@ -41,6 +41,11 @@ public class Usage extends EntityWithId {
 	@Setter(onMethod = @__({ @AttributeSetter(value = AttributeType.PROPERTY, targetName = "usageType") }))
 	private String usageType;
 
+
+    @Getter(onMethod = @__({@AttributeGetter(value = AttributeType.PROPERTY, targetName = "lastUpdate")}))
+    @Setter(onMethod = @__({@AttributeSetter(value = AttributeType.PROPERTY, targetName = "lastUpdate")}))
+    private Instant lastUpdate;
+
     @Getter(onMethod = @__({
         @AttributeGetter(value = AttributeType.PROPERTY_LIST, targetName = "ratedProductUsage") }))
     @Setter(onMethod = @__({

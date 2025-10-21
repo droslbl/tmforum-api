@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import java.time.Clock;
 
 @Slf4j
 @Controller("${general.basepath:/}")
@@ -33,11 +34,13 @@ public class UsageSpecificationController extends AbstractApiController<UsageSpe
                 implements UsageSpecificationApi {
 
         private final TMForumMapper tmForumMapper;
+        private final Clock clock;
 
         public UsageSpecificationController(QueryParser queryParser, ReferenceValidationService validationService, TmForumRepository repository,
-                                            TMForumMapper tmForumMapper, TMForumEventHandler eventHandler) {
+                                            TMForumMapper tmForumMapper, Clock clock, TMForumEventHandler eventHandler) {
                 super(queryParser, validationService, repository, eventHandler);
                 this.tmForumMapper = tmForumMapper;
+                this.clock = clock;
         }
 
         @Override
@@ -45,6 +48,8 @@ public class UsageSpecificationController extends AbstractApiController<UsageSpe
                         @NonNull UsageSpecificationCreateVO usageSpecification) {
                 UsageSpecification usage = tmForumMapper.map(tmForumMapper.map(usageSpecification,
                                 IdHelper.toNgsiLd(UUID.randomUUID().toString(), UsageSpecification.TYPE_USP)));
+
+                usage.setLastUpdate(clock.instant());
                 return create(getCheckingMono(usage), UsageSpecification.class)
                                 .map(tmForumMapper::map)
                                 .map(HttpResponse::created);
@@ -89,6 +94,7 @@ public class UsageSpecificationController extends AbstractApiController<UsageSpe
                                         TmForumExceptionReason.NOT_FOUND);
                 }
                 UsageSpecification ug = tmForumMapper.map(usageSpecification, id);
+                ug.setLastUpdate(clock.instant());
 
                 return patch(id, ug, getCheckingMono(ug), UsageSpecification.class)
                                 .map(tmForumMapper::map)
