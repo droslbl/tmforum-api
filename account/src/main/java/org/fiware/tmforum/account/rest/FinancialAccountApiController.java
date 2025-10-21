@@ -24,24 +24,29 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.time.Clock;
 
 @Slf4j
 @Controller("${general.basepath:/}")
 public class FinancialAccountApiController extends AbstractApiController<FinancialAccount> implements FinancialAccountApi {
 
     private final TMForumMapper tmForumMapper;
+    private final Clock clock;
 
     public FinancialAccountApiController(QueryParser queryParser, ReferenceValidationService validationService,
                                          TmForumRepository productFinancialAccountRepository,
-                                         TMForumMapper tmForumMapper, TMForumEventHandler eventHandler) {
+                                         TMForumMapper tmForumMapper, Clock clock, TMForumEventHandler eventHandler) {
         super(queryParser, validationService, productFinancialAccountRepository, eventHandler);
         this.tmForumMapper = tmForumMapper;
+        this.clock = clock;
     }
 
     @Override
     public Mono<HttpResponse<FinancialAccountVO>> createFinancialAccount(FinancialAccountCreateVO financialAccountVo) {
         FinancialAccount financialAccount = tmForumMapper.map(
                 tmForumMapper.map(financialAccountVo, IdHelper.toNgsiLd(UUID.randomUUID().toString(), FinancialAccount.TYPE_FINANCIALAC)));
+
+        financialAccount.setLastUpdate(clock.instant());
 
         return create(getCheckingMono(financialAccount), FinancialAccount.class)
                 .map(tmForumMapper::map)
@@ -79,6 +84,7 @@ public class FinancialAccountApiController extends AbstractApiController<Financi
                     TmForumExceptionReason.NOT_FOUND);
         }
         FinancialAccount updatedFinancialAccount = tmForumMapper.map(tmForumMapper.map(financialAccountUpdateVO, id));
+        updatedFinancialAccount.setLastUpdate(clock.instant());
 
         return patch(id, updatedFinancialAccount, getCheckingMono(updatedFinancialAccount), FinancialAccount.class)
                 .map(tmForumMapper::map)

@@ -25,25 +25,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.time.Clock;
 
 @Slf4j
 @Controller("${general.basepath:/}")
 public class SettlementAccountApiController extends AbstractApiController<SettlementAccount> implements SettlementAccountApi {
 
     private final TMForumMapper tmForumMapper;
-
+    private final Clock clock;
 
     public SettlementAccountApiController(QueryParser queryParser, ReferenceValidationService validationService,
                                           TmForumRepository productSettlementAccountRepository,
-                                          TMForumMapper tmForumMapper, TMForumEventHandler eventHandler) {
+                                          TMForumMapper tmForumMapper, Clock clock, TMForumEventHandler eventHandler) {
         super(queryParser, validationService, productSettlementAccountRepository, eventHandler);
         this.tmForumMapper = tmForumMapper;
+        this.clock = clock;
     }
 
     @Override
     public Mono<HttpResponse<SettlementAccountVO>> createSettlementAccount(SettlementAccountCreateVO settlementAccountVo) {
         SettlementAccount settlementAccount = tmForumMapper.map(
                 tmForumMapper.map(settlementAccountVo, IdHelper.toNgsiLd(UUID.randomUUID().toString(), SettlementAccount.TYPE_SETTLEMENTAC)));
+
+        settlementAccount.setLastUpdate(clock.instant());
 
         return create(getCheckingMono(settlementAccount), SettlementAccount.class)
                 .map(tmForumMapper::map)
@@ -83,6 +87,7 @@ public class SettlementAccountApiController extends AbstractApiController<Settle
                     TmForumExceptionReason.NOT_FOUND);
         }
         SettlementAccount updatedSettlementAccount = tmForumMapper.map(tmForumMapper.map(settlementAccountUpdateVO, id));
+        updatedSettlementAccount.setLastUpdate(clock.instant());
 
         return patch(id, updatedSettlementAccount, getCheckingMono(updatedSettlementAccount), SettlementAccount.class)
                 .map(tmForumMapper::map)

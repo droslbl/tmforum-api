@@ -44,6 +44,10 @@ public class BillingAccount extends Account {
     @Setter(onMethod = @__({ @AttributeSetter(value = AttributeType.RELATIONSHIP, targetName = "financialAccount", targetClass = FinancialAccountRef.class) }))
     private FinancialAccountRef financialAccount;
 
+    @Getter(onMethod = @__({@AttributeGetter(value = AttributeType.PROPERTY, targetName = "lastUpdate")}))
+    @Setter(onMethod = @__({@AttributeSetter(value = AttributeType.PROPERTY, targetName = "lastUpdate")}))
+    private Instant lastUpdate;
+
     @Getter(onMethod = @__({ @AttributeGetter(value = AttributeType.PROPERTY_LIST, targetName = "paymentPlan") }))
     @Setter(onMethod = @__({ @AttributeSetter(value = AttributeType.PROPERTY_LIST, targetName = "paymentPlan", targetClass = PaymentPlan.class) }))
     private List<PaymentPlan> paymentPlan;

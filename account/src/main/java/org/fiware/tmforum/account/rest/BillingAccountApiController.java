@@ -25,24 +25,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.time.Clock;
 
 @Slf4j
 @Controller("${general.basepath:/}")
 public class BillingAccountApiController extends AbstractApiController<BillingAccount> implements BillingAccountApi {
 
     private final TMForumMapper tmForumMapper;
+    private final Clock clock;
 
     public BillingAccountApiController(QueryParser queryParser, ReferenceValidationService validationService,
                                        TmForumRepository productBillingAccountRepository, TMForumMapper tmForumMapper,
-                                       TMForumEventHandler eventHandler) {
+                                       Clock clock, TMForumEventHandler eventHandler) {
         super(queryParser, validationService, productBillingAccountRepository, eventHandler);
         this.tmForumMapper = tmForumMapper;
+        this.clock = clock;
     }
 
     @Override
     public Mono<HttpResponse<BillingAccountVO>> createBillingAccount(BillingAccountCreateVO billingAccountVo) {
         BillingAccount billingAccount = tmForumMapper.map(
                 tmForumMapper.map(billingAccountVo, IdHelper.toNgsiLd(UUID.randomUUID().toString(), BillingAccount.TYPE_BILLINGAC)));
+
+        billingAccount.setLastUpdate(clock.instant());
 
         return create(getCheckingMono(billingAccount), BillingAccount.class)
                 .map(tmForumMapper::map)
@@ -82,6 +87,7 @@ public class BillingAccountApiController extends AbstractApiController<BillingAc
                     TmForumExceptionReason.NOT_FOUND);
         }
         BillingAccount updatedBillingAccount = tmForumMapper.map(tmForumMapper.map(billingAccountUpdateVO, id));
+        updatedBillingAccount.setLastUpdate(clock.instant());
 
         return patch(id, updatedBillingAccount, getCheckingMono(updatedBillingAccount), BillingAccount.class)
                 .map(tmForumMapper::map)

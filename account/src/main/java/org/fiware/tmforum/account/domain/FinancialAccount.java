@@ -20,6 +20,10 @@ import java.util.List;
 @MappingEnabled(entityType = FinancialAccount.TYPE_FINANCIALAC)
 public class FinancialAccount extends Account {
 
+    @Getter(onMethod = @__({@AttributeGetter(value = AttributeType.PROPERTY, targetName = "lastUpdate")}))
+    @Setter(onMethod = @__({@AttributeSetter(value = AttributeType.PROPERTY, targetName = "lastUpdate")}))
+    private Instant lastUpdate;
+
     public FinancialAccount(String id) {
         super(TYPE_FINANCIALAC, id);
     }
