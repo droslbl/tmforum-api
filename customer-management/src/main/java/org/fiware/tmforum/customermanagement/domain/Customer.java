@@ -20,6 +20,7 @@ import io.github.wistefan.mapping.annotations.MappingEnabled;
 
 import java.net.URI;
 import java.util.List;
+import java.time.Instant;
 
 @EqualsAndHashCode(callSuper = true)
 @MappingEnabled(entityType = Customer.TYPE_CUSTOMER)
@@ -38,6 +39,10 @@ public class Customer extends EntityWithId {
     @Getter(onMethod = @__({@AttributeGetter(value = AttributeType.PROPERTY, targetName = "status")}))
     @Setter(onMethod = @__({@AttributeSetter(value = AttributeType.PROPERTY, targetName = "status")}))
     private String status;
+
+    @Getter(onMethod = @__({@AttributeGetter(value = AttributeType.PROPERTY, targetName = "lastUpdate")}))
+    @Setter(onMethod = @__({@AttributeSetter(value = AttributeType.PROPERTY, targetName = "lastUpdate")}))
+    private Instant lastUpdate;
 
     @Getter(onMethod = @__({@AttributeGetter(value = AttributeType.PROPERTY, targetName = "statusReason")}))
     @Setter(onMethod = @__({@AttributeSetter(value = AttributeType.PROPERTY, targetName = "statusReason")}))

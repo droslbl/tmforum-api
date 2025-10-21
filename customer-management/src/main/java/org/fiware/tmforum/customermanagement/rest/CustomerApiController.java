@@ -26,18 +26,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.time.Clock;
 
 @Slf4j
 @Controller("${general.basepath:/}")
 public class CustomerApiController extends AbstractApiController<Customer> implements CustomerApi {
 
 	private final TMForumMapper tmForumMapper;
+	private final Clock clock;
 
 	public CustomerApiController(QueryParser queryParser, ReferenceValidationService validationService,
 			TmForumRepository customerManagementRepository,
-			TMForumMapper tmForumMapper, TMForumEventHandler eventHandler) {
+			TMForumMapper tmForumMapper, Clock clock, TMForumEventHandler eventHandler) {
 		super(queryParser, validationService, customerManagementRepository, eventHandler);
 		this.tmForumMapper = tmForumMapper;
+		this.clock = clock;
 	}
 
 	@Override
@@ -45,6 +48,8 @@ public class CustomerApiController extends AbstractApiController<Customer> imple
 		Customer customer = tmForumMapper.map(
 				tmForumMapper.map(customerCreateVO,
 						IdHelper.toNgsiLd(UUID.randomUUID().toString(), Customer.TYPE_CUSTOMER)));
+
+		customer.setLastUpdate(clock.instant());
 
 		return create(getCheckingMono(customer), Customer.class)
 				.map(tmForumMapper::map)
@@ -90,6 +95,7 @@ public class CustomerApiController extends AbstractApiController<Customer> imple
 					TmForumExceptionReason.NOT_FOUND);
 		}
 		Customer customer = tmForumMapper.map(customerUpdateVO, id);
+		customer.setLastUpdate(clock.instant());
 
 		return patch(id, customer, getCheckingMono(customer), Customer.class)
 				.map(tmForumMapper::map)

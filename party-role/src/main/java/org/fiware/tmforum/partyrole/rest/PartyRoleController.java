@@ -24,6 +24,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.time.Clock;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,17 +32,21 @@ import java.util.UUID;
 @Controller("${general.basepath:/}")
 public class PartyRoleController extends AbstractApiController<PartyRole> implements PartyRoleApi {
 	private final TMForumMapper tmForumMapper;
+	private final Clock clock;
 
 	public PartyRoleController(QueryParser queryParser, ReferenceValidationService validationService,
-							   TMForumMapper mapper, TmForumRepository repository, TMForumEventHandler eventHandler) {
+							   TMForumMapper mapper, Clock clock, TmForumRepository repository, TMForumEventHandler eventHandler) {
 		super(queryParser, validationService, repository, eventHandler);
 		this.tmForumMapper = mapper;
+		this.clock = clock;
 	}
 
 	@Override
 	public Mono<HttpResponse<PartyRoleVO>> createPartyRole(@NonNull PartyRoleCreateVO partyRoleCreateVO) {
 		PartyRole partyRole = tmForumMapper.map(tmForumMapper.map(partyRoleCreateVO,
 				IdHelper.toNgsiLd(UUID.randomUUID().toString(), PartyRole.TYPE_PR)));
+
+		partyRole.setLastUpdate(clock.instant());
 		return create(getCheckingMono(partyRole), PartyRole.class)
 				.map(tmForumMapper::map)
 				.map(HttpResponse::created);
@@ -69,6 +74,7 @@ public class PartyRoleController extends AbstractApiController<PartyRole> implem
 					TmForumExceptionReason.NOT_FOUND);
 		}
 		PartyRole pr = tmForumMapper.map(partyRoleUpdateVO, id);
+		pr.setLastUpdate(clock.instant());
 
 		return patch(id, pr, getCheckingMono(pr), PartyRole.class)
 				.map(tmForumMapper::map)

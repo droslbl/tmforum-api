@@ -2,6 +2,7 @@ package org.fiware.tmforum.partyrole.domain;
 
 import java.net.URI;
 import java.util.List;
+import java.time.Instant;
 
 import org.fiware.tmforum.common.domain.AgreementRef;
 import org.fiware.tmforum.common.domain.Characteristic;
@@ -48,6 +49,10 @@ public class PartyRole extends EntityWithId{
     @Getter(onMethod = @__({ @AttributeGetter(value = AttributeType.RELATIONSHIP_LIST, targetName = "account") }))
 	@Setter(onMethod = @__({ @AttributeSetter(value = AttributeType.RELATIONSHIP_LIST, targetName = "account", targetClass = AccountRef.class) }))
 	private List<AccountRef> account;
+
+	@Getter(onMethod = @__({@AttributeGetter(value = AttributeType.PROPERTY, targetName = "lastUpdate")}))
+	@Setter(onMethod = @__({@AttributeSetter(value = AttributeType.PROPERTY, targetName = "lastUpdate")}))
+	private Instant lastUpdate;
 
     @Getter(onMethod = @__({ @AttributeGetter(value = AttributeType.RELATIONSHIP_LIST, targetName = "agreement") }))
 	@Setter(onMethod = @__({ @AttributeSetter(value = AttributeType.RELATIONSHIP_LIST, targetName = "agreement", targetClass = AgreementRef.class) }))
