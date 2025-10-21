@@ -24,6 +24,7 @@ import reactor.core.publisher.Mono;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.Clock;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -33,11 +34,13 @@ public class AgreementSpecController extends AbstractApiController<AgreementSpec
                 implements AgreementSpecificationApi {
 
         private final TMForumMapper tmForumMapper;
+        private final Clock clock;
 
         public AgreementSpecController(QueryParser queryParser, ReferenceValidationService validationService, TmForumRepository repository,
-                        TMForumMapper tmForumMapper, TMForumEventHandler eventHandler) {
+                        TMForumMapper tmForumMapper, Clock clock, TMForumEventHandler eventHandler) {
                 super(queryParser, validationService, repository, eventHandler);
                 this.tmForumMapper = tmForumMapper;
+                this.clock = clock;
         }
 
         @Override
@@ -45,6 +48,10 @@ public class AgreementSpecController extends AbstractApiController<AgreementSpec
                         @NonNull AgreementSpecificationCreateVO agreementSpecification) {
                 AgreementSpecification agreement = tmForumMapper.map(tmForumMapper.map(agreementSpecification,
                                 IdHelper.toNgsiLd(UUID.randomUUID().toString(), AgreementSpecification.TYPE_AGREEMENT_SPECIFICATION)));
+
+                agreement.setLastUpdate(clock.instant());
+
+
                 return create(getCheckingMono(agreement), AgreementSpecification.class)
                                 .map(tmForumMapper::map)
                                 .map(HttpResponse::created);
@@ -89,6 +96,8 @@ public class AgreementSpecController extends AbstractApiController<AgreementSpec
                                         TmForumExceptionReason.NOT_FOUND);
                 }
                 AgreementSpecification ag = tmForumMapper.map(agreementSpecification, id);
+
+                ag.setLastUpdate(clock.instant());
 
                 return patch(id, ag, getCheckingMono(ag), AgreementSpecification.class)
                                 .map(tmForumMapper::map)

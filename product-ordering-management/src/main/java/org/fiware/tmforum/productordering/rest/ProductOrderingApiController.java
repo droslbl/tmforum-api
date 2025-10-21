@@ -50,6 +50,7 @@ public class ProductOrderingApiController extends AbstractApiController<ProductO
 				tmForumMapper.map(productOrderCreateVO,
 						IdHelper.toNgsiLd(UUID.randomUUID().toString(), ProductOrder.TYPE_PRODUCT_ORDER)));
 		productOrder.setOrderDate(clock.instant());
+		productOrder.setLastUpdate(clock.instant());
 
 		return create(getCheckingMono(productOrder), ProductOrder.class)
 				.map(tmForumMapper::map)
@@ -88,6 +89,8 @@ public class ProductOrderingApiController extends AbstractApiController<ProductO
 		if (Optional.ofNullable(productOrder.getProductOrderItem()).map(List::isEmpty).orElse(false)) {
 			productOrder.setProductOrderItem(null);
 		}
+
+		productOrder.setLastUpdate(clock.instant());
 
 		return patch(id, productOrder, getCheckingMono(productOrder), ProductOrder.class)
 				.map(tmForumMapper::map)

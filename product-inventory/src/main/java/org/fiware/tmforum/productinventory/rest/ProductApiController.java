@@ -20,7 +20,6 @@ import org.fiware.tmforum.common.rest.AbstractApiController;
 import org.fiware.tmforum.common.validation.ReferenceValidationService;
 import org.fiware.tmforum.common.validation.ReferencedEntity;
 import org.fiware.tmforum.product.*;
-import org.fiware.tmforum.product.Product;
 import org.fiware.tmforum.productinventory.TMForumMapper;
 import reactor.core.publisher.Mono;
 

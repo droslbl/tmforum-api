@@ -23,6 +23,7 @@ import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.time.Clock;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -32,17 +33,23 @@ import java.util.UUID;
 public class AgreementController extends AbstractApiController<Agreement> implements AgreementApi {
 
 	private final TMForumMapper tmForumMapper;
+	private final Clock clock;
 
 	public AgreementController(QueryParser queryParser, ReferenceValidationService validationService, TmForumRepository partyRepository,
-							   TMForumMapper tmForumMapper, TMForumEventHandler eventHandler) {
+							   TMForumMapper tmForumMapper, Clock clock, TMForumEventHandler eventHandler) {
 		super(queryParser, validationService, partyRepository, eventHandler);
 		this.tmForumMapper = tmForumMapper;
+
+		this.clock = clock;
 	}
 
 	@Override
 	public Mono<HttpResponse<AgreementVO>> createAgreement(@NonNull AgreementCreateVO agreementCreateVO) {
 		Agreement agreement = tmForumMapper.map(tmForumMapper.map(agreementCreateVO,
 				IdHelper.toNgsiLd(UUID.randomUUID().toString(), Agreement.TYPE_AGREEMENT)));
+
+		agreement.setLastUpdate(clock.instant());
+
 		return create(getCheckingMono(agreement), Agreement.class)
 				.map(tmForumMapper::map)
 				.map(HttpResponse::created);
@@ -92,6 +99,8 @@ public class AgreementController extends AbstractApiController<Agreement> implem
 		if (Optional.ofNullable(agreement.getEngagedParty()).map(List::isEmpty).orElse(false)) {
 			agreement.setEngagedParty(null);
 		}
+
+		agreement.setLastUpdate(clock.instant());
 
 		return patch(id, agreement, getCheckingMono(agreement), Agreement.class)
 				.map(tmForumMapper::map)

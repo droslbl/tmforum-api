@@ -63,6 +63,10 @@ public class Agreement extends EntityWithId {
 	@Setter(onMethod = @__({@AttributeSetter(value = AttributeType.PROPERTY, targetName = "version")}))
 	private String version;
 
+	@Getter(onMethod = @__({@AttributeGetter(value = AttributeType.PROPERTY, targetName = "lastUpdate")}))
+	@Setter(onMethod = @__({@AttributeSetter(value = AttributeType.PROPERTY, targetName = "lastUpdate")}))
+	private Instant lastUpdate;
+
 	@Getter(onMethod = @__({
 			@AttributeGetter(value = AttributeType.PROPERTY_LIST, targetName = "agreementAuthorization")}))
 	@Setter(onMethod = @__({

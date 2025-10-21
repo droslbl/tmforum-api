@@ -50,6 +50,10 @@ public class ProductOrder extends EntityWithId {
 	@Setter(onMethod = @__({ @AttributeSetter(value = AttributeType.PROPERTY, targetName = "expectedCompletionDate") }))
 	private Instant expectedCompletionDate;
 
+	@Getter(onMethod = @__({@AttributeGetter(value = AttributeType.PROPERTY, targetName = "lastUpdate")}))
+	@Setter(onMethod = @__({@AttributeSetter(value = AttributeType.PROPERTY, targetName = "lastUpdate")}))
+	private Instant lastUpdate;
+
 	@Getter(onMethod = @__({
 			@AttributeGetter(value = AttributeType.PROPERTY, targetName = "requestedCompletionDate") }))
 	@Setter(onMethod = @__({
