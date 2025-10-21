@@ -20,9 +20,11 @@ import org.fiware.tmforum.common.rest.AbstractApiController;
 import org.fiware.tmforum.common.validation.ReferenceValidationService;
 import org.fiware.tmforum.common.validation.ReferencedEntity;
 import org.fiware.tmforum.product.*;
+import org.fiware.tmforum.product.Product;
 import org.fiware.tmforum.productinventory.TMForumMapper;
 import reactor.core.publisher.Mono;
 
+import java.time.Clock;
 import java.util.*;
 
 @Slf4j
@@ -30,11 +32,13 @@ import java.util.*;
 public class ProductApiController extends AbstractApiController<Product> implements ProductApi {
 
 	private final TMForumMapper tmForumMapper;
+	private final Clock clock;
 
 	public ProductApiController(QueryParser queryParser, ReferenceValidationService validationService,
-			TmForumRepository repository, TMForumMapper tmForumMapper, TMForumEventHandler eventHandler) {
+			TmForumRepository repository, TMForumMapper tmForumMapper, Clock clock, TMForumEventHandler eventHandler) {
 		super(queryParser, validationService, repository, eventHandler);
 		this.tmForumMapper = tmForumMapper;
+		this.clock = clock;
 	}
 
 	@Override
@@ -42,6 +46,7 @@ public class ProductApiController extends AbstractApiController<Product> impleme
 		Product product = tmForumMapper.map(
 				tmForumMapper.map(productCreateVO,
 						IdHelper.toNgsiLd(UUID.randomUUID().toString(), Product.TYPE_PRODUCT)));
+		product.setLastUpdate(clock.instant());
 
 		return create(getCheckingMono(product), Product.class)
 				.map(tmForumMapper::map)
@@ -133,6 +138,7 @@ public class ProductApiController extends AbstractApiController<Product> impleme
 		}
 
 		Product product = tmForumMapper.map(productUpdateVO, id);
+		product.setLastUpdate(clock.instant());
 
 		return patch(id, product, getCheckingMono(product), Product.class)
 				.map(tmForumMapper::map)
