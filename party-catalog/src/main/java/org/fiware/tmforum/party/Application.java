@@ -2,6 +2,7 @@ package org.fiware.tmforum.party;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import io.micronaut.context.annotation.Bean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.event.BeanCreatedEvent;
 import io.micronaut.context.event.BeanCreatedEventListener;
@@ -12,6 +13,7 @@ import org.fiware.party.model.OrganizationVO;
 import org.fiware.tmforum.common.mapping.FieldCleaningSerializer;
 
 import javax.inject.Singleton;
+import java.time.Clock;
 
 /**
  * Base application as starting point
@@ -21,6 +23,11 @@ public class Application {
 
 	public static void main(String[] args) {
 		Micronaut.run(Application.class, args);
+	}
+
+	@Bean
+	public Clock clock() {
+		return Clock.systemUTC();
 	}
 
 	@Singleton
