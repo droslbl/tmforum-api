@@ -1,0 +1,104 @@
+openapi: 3.0.3
+info:
+  title: Customer Extension
+  description: '## TMF API Reference: TMF 629 - Customer Management Extension
+    This extension adds the lastUpdate field to Customer entities to track modification timestamps.'
+  version: 4.0.0
+tags:
+- name: customer
+paths: {}
+components:
+  schemas:
+    Customer:
+      type: object
+      description: Customer represents individuals, organizations, or organizational units that have a relationship with an enterprise. A customer is created from a party.
+      required:
+      - engagedParty
+      - name
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the customer
+        href:
+          type: string
+          description: Reference of the customer
+        lastUpdate:
+          type: string
+          format: date-time
+          description: Date and time of the last update
+        name:
+          type: string
+          description: A word, term, or phrase by which the Customer is known and distinguished from other Customers.
+        status:
+          type: string
+          description: Used to track the lifecycle status of the customer.
+        statusReason:
+          type: string
+          description: A string providing an explanation on the value of the status lifecycle. For instance if the status is Rejected, statusReason will provide the reason for rejection.
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          format: uri
+          description: A URI to a JSON-Schema file that defines additional attributes and relationships
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
+    Customer_Create:
+      type: object
+      description: 'Customer represents individuals, organizations, or organizational units that have a relationship with an enterprise. A customer is created from a party.Skipped properties: id,href,lastUpdate'
+      required:
+      - engagedParty
+      - name
+      properties:
+        lastUpdate:
+          type: string
+          format: date-time
+          description: Date and time of the last update
+        name:
+          type: string
+          description: A word, term, or phrase by which the Customer is known and distinguished from other Customers.
+        status:
+          type: string
+          description: Used to track the lifecycle status of the customer.
+        statusReason:
+          type: string
+          description: A string providing an explanation on the value of the status lifecycle. For instance if the status is Rejected, statusReason will provide the reason for rejection.
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          format: uri
+          description: A URI to a JSON-Schema file that defines additional attributes and relationships
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
+    Customer_Update:
+      type: object
+      description: 'Customer represents individuals, organizations, or organizational units that have a relationship with an enterprise. A customer is created from a party.Skipped properties: id,href,lastUpdate'
+      properties:
+        lastUpdate:
+          type: string
+          format: date-time
+          description: Date and time of the last update
+        name:
+          type: string
+          description: A word, term, or phrase by which the Customer is known and distinguished from other Customers.
+        status:
+          type: string
+          description: Used to track the lifecycle status of the customer.
+        statusReason:
+          type: string
+          description: A string providing an explanation on the value of the status lifecycle. For instance if the status is Rejected, statusReason will provide the reason for rejection.
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          format: uri
+          description: A URI to a JSON-Schema file that defines additional attributes and relationships
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class entity name

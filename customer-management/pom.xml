@@ -200,6 +200,23 @@
                     <apiPackage>org.fiware.customermanagement.api</apiPackage>
                     <modelPackage>org.fiware.customermanagement.model</modelPackage>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>openapi-customer-extension</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <skip>false</skip>
+                            <inputSpec>
+                                ${project.parent.basedir}/${artifactId}/api/customer-extension.yaml
+                            </inputSpec>
+                            <apiPackage>org.fiware.customermanagement.api.ext</apiPackage>
+                            <modelPackage>org.fiware.customermanagement.model</modelPackage>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <!-- add generated sources -->
             <plugin>
