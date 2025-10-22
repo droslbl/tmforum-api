@@ -1,0 +1,371 @@
+openapi: 3.0.3
+info:
+  title: Account Management Extension
+  description: '## TMF API Reference: TMF 666 - Account Management Extension
+    This extension adds the lastUpdate field to BillingAccount, SettlementAccount, and FinancialAccount entities to track modification timestamps.'
+  version: 4.0.0
+tags:
+- name: billingAccount
+- name: settlementAccount
+- name: financialAccount
+paths: {}
+components:
+  schemas:
+    BillingAccount:
+      type: object
+      description: A party account used for billing purposes. It includes a description of the bill structure (frequency, presentation media, format and so on).
+      required:
+      - name
+      - relatedParty
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the billing account
+        href:
+          type: string
+          description: Reference of the billing account
+        accountType:
+          type: string
+          description: A categorization of an account
+        description:
+          type: string
+          description: Detailed description of the party account
+        lastModified:
+          type: string
+          format: date-time
+          description: Date of last modification of the account
+        lastUpdate:
+          type: string
+          format: date-time
+          description: Date and time of the last update
+        name:
+          type: string
+          description: Name of the account
+        paymentStatus:
+          type: string
+          description: The condition of the account, such as due, paid, in arrears
+        state:
+          type: string
+          description: Contains the lifecycle state such as Active, Closed, Suspended
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          format: uri
+          description: A URI to a JSON-Schema file that defines additional attributes and relationships
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
+    BillingAccount_Create:
+      type: object
+      description: 'A party account used for billing purposes.Skipped properties: id,href,lastUpdate'
+      required:
+      - name
+      - relatedParty
+      properties:
+        accountType:
+          type: string
+          description: A categorization of an account
+        description:
+          type: string
+          description: Detailed description of the party account
+        lastModified:
+          type: string
+          format: date-time
+          description: Date of last modification of the account
+        lastUpdate:
+          type: string
+          format: date-time
+          description: Date and time of the last update
+        name:
+          type: string
+          description: Name of the account
+        paymentStatus:
+          type: string
+          description: The condition of the account, such as due, paid, in arrears
+        state:
+          type: string
+          description: Contains the lifecycle state such as Active, Closed, Suspended
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          format: uri
+          description: A URI to a JSON-Schema file that defines additional attributes and relationships
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
+    BillingAccount_Update:
+      type: object
+      description: 'A party account used for billing purposes.Skipped properties: id,href,lastUpdate'
+      properties:
+        accountType:
+          type: string
+          description: A categorization of an account
+        description:
+          type: string
+          description: Detailed description of the party account
+        lastModified:
+          type: string
+          format: date-time
+          description: Date of last modification of the account
+        lastUpdate:
+          type: string
+          format: date-time
+          description: Date and time of the last update
+        name:
+          type: string
+          description: Name of the account
+        paymentStatus:
+          type: string
+          description: The condition of the account, such as due, paid, in arrears
+        state:
+          type: string
+          description: Contains the lifecycle state such as Active, Closed, Suspended
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          format: uri
+          description: A URI to a JSON-Schema file that defines additional attributes and relationships
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
+    SettlementAccount:
+      type: object
+      description: A party account used for settlement purposes.
+      required:
+      - name
+      - relatedParty
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the settlement account
+        href:
+          type: string
+          description: Reference of the settlement account
+        accountType:
+          type: string
+          description: A categorization of an account
+        description:
+          type: string
+          description: Detailed description of the party account
+        lastModified:
+          type: string
+          format: date-time
+          description: Date of last modification of the account
+        lastUpdate:
+          type: string
+          format: date-time
+          description: Date and time of the last update
+        name:
+          type: string
+          description: Name of the account
+        paymentStatus:
+          type: string
+          description: The condition of the account, such as due, paid, in arrears
+        state:
+          type: string
+          description: Contains the lifecycle state such as Active, Closed, Suspended
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          format: uri
+          description: A URI to a JSON-Schema file that defines additional attributes and relationships
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
+    SettlementAccount_Create:
+      type: object
+      description: 'A party account used for settlement purposes.Skipped properties: id,href,lastUpdate'
+      required:
+      - name
+      - relatedParty
+      properties:
+        accountType:
+          type: string
+          description: A categorization of an account
+        description:
+          type: string
+          description: Detailed description of the party account
+        lastModified:
+          type: string
+          format: date-time
+          description: Date of last modification of the account
+        lastUpdate:
+          type: string
+          format: date-time
+          description: Date and time of the last update
+        name:
+          type: string
+          description: Name of the account
+        paymentStatus:
+          type: string
+          description: The condition of the account, such as due, paid, in arrears
+        state:
+          type: string
+          description: Contains the lifecycle state such as Active, Closed, Suspended
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          format: uri
+          description: A URI to a JSON-Schema file that defines additional attributes and relationships
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
+    SettlementAccount_Update:
+      type: object
+      description: 'A party account used for settlement purposes.Skipped properties: id,href,lastUpdate'
+      properties:
+        accountType:
+          type: string
+          description: A categorization of an account
+        description:
+          type: string
+          description: Detailed description of the party account
+        lastModified:
+          type: string
+          format: date-time
+          description: Date of last modification of the account
+        lastUpdate:
+          type: string
+          format: date-time
+          description: Date and time of the last update
+        name:
+          type: string
+          description: Name of the account
+        paymentStatus:
+          type: string
+          description: The condition of the account, such as due, paid, in arrears
+        state:
+          type: string
+          description: Contains the lifecycle state such as Active, Closed, Suspended
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          format: uri
+          description: A URI to a JSON-Schema file that defines additional attributes and relationships
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
+    FinancialAccount:
+      type: object
+      description: An account of money owed by a party to another entity in exchange for goods or services.
+      required:
+      - name
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the financial account
+        href:
+          type: string
+          description: Reference of the financial account
+        accountType:
+          type: string
+          description: A categorization of an account
+        description:
+          type: string
+          description: Detailed description of the party account
+        lastModified:
+          type: string
+          format: date-time
+          description: Date of last modification of the account
+        lastUpdate:
+          type: string
+          format: date-time
+          description: Date and time of the last update
+        name:
+          type: string
+          description: Name of the account
+        state:
+          type: string
+          description: Contains the lifecycle state such as Active, Closed, Suspended
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          format: uri
+          description: A URI to a JSON-Schema file that defines additional attributes and relationships
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
+    FinancialAccount_Create:
+      type: object
+      description: 'An account of money owed by a party to another entity.Skipped properties: id,href,lastUpdate'
+      required:
+      - name
+      properties:
+        accountType:
+          type: string
+          description: A categorization of an account
+        description:
+          type: string
+          description: Detailed description of the party account
+        lastModified:
+          type: string
+          format: date-time
+          description: Date of last modification of the account
+        lastUpdate:
+          type: string
+          format: date-time
+          description: Date and time of the last update
+        name:
+          type: string
+          description: Name of the account
+        state:
+          type: string
+          description: Contains the lifecycle state such as Active, Closed, Suspended
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          format: uri
+          description: A URI to a JSON-Schema file that defines additional attributes and relationships
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
+    FinancialAccount_Update:
+      type: object
+      description: 'An account of money owed by a party to another entity.Skipped properties: id,href,lastUpdate'
+      properties:
+        accountType:
+          type: string
+          description: A categorization of an account
+        description:
+          type: string
+          description: Detailed description of the party account
+        lastModified:
+          type: string
+          format: date-time
+          description: Date of last modification of the account
+        lastUpdate:
+          type: string
+          format: date-time
+          description: Date and time of the last update
+        name:
+          type: string
+          description: Name of the account
+        state:
+          type: string
+          description: Contains the lifecycle state such as Active, Closed, Suspended
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          format: uri
+          description: A URI to a JSON-Schema file that defines additional attributes and relationships
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
