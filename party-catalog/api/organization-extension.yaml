@@ -1,0 +1,127 @@
+openapi: 3.0.3
+info:
+  title: Organization Extension
+  description: '## TMF API Reference: TMF 632 - Party Management Extension
+    This extension adds the lastUpdate field to Organization entities to track modification timestamps.'
+  version: 4.0.0
+tags:
+- name: organization
+paths: {}
+components:
+  schemas:
+    Organization:
+      type: object
+      description: Organization represents a group of people identified by shared interests or purpose. Examples include business, department and enterprise. Because of the complex nature of many businesses, both organizations and organization units are represented by the same data.
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the organization
+        href:
+          type: string
+          description: Reference of the organization
+        isHeadOffice:
+          type: boolean
+          description: If value is true, the organization is the head office
+        isLegalEntity:
+          type: boolean
+          description: If value is true, the organization is a legal entity known by a national referential.
+        lastUpdate:
+          type: string
+          format: date-time
+          description: Date and time of the last update
+        name:
+          type: string
+          description: Organization name (department name for example)
+        nameType:
+          type: string
+          description: Type of the name - Co, Inc, Ltd
+        organizationType:
+          type: string
+          description: Type of Organization (company, department...)
+        tradingName:
+          type: string
+          description: Name that the organization (unit) trades under
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          format: uri
+          description: A URI to a JSON-Schema file that defines additional attributes and relationships
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
+    Organization_Create:
+      type: object
+      description: 'Organization represents a group of people identified by shared interests or purpose. Examples include business, department and enterprise. Because of the complex nature of many businesses, both organizations and organization units are represented by the same data.Skipped properties: id,href,lastUpdate'
+      required:
+      - tradingName
+      properties:
+        isHeadOffice:
+          type: boolean
+          description: If value is true, the organization is the head office
+        isLegalEntity:
+          type: boolean
+          description: If value is true, the organization is a legal entity known by a national referential.
+        lastUpdate:
+          type: string
+          format: date-time
+          description: Date and time of the last update
+        name:
+          type: string
+          description: Organization name (department name for example)
+        nameType:
+          type: string
+          description: Type of the name - Co, Inc, Ltd
+        organizationType:
+          type: string
+          description: Type of Organization (company, department...)
+        tradingName:
+          type: string
+          description: Name that the organization (unit) trades under
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          format: uri
+          description: A URI to a JSON-Schema file that defines additional attributes and relationships
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
+    Organization_Update:
+      type: object
+      description: 'Organization represents a group of people identified by shared interests or purpose. Examples include business, department and enterprise. Because of the complex nature of many businesses, both organizations and organization units are represented by the same data.Skipped properties: id,href,lastUpdate'
+      properties:
+        isHeadOffice:
+          type: boolean
+          description: If value is true, the organization is the head office
+        isLegalEntity:
+          type: boolean
+          description: If value is true, the organization is a legal entity known by a national referential.
+        lastUpdate:
+          type: string
+          format: date-time
+          description: Date and time of the last update
+        name:
+          type: string
+          description: Organization name (department name for example)
+        nameType:
+          type: string
+          description: Type of the name - Co, Inc, Ltd
+        organizationType:
+          type: string
+          description: Type of Organization (company, department...)
+        tradingName:
+          type: string
+          description: Name that the organization (unit) trades under
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          format: uri
+          description: A URI to a JSON-Schema file that defines additional attributes and relationships
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class entity name

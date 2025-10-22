@@ -1,0 +1,248 @@
+openapi: 3.0.3
+info:
+  title: Individual Extension
+  description: '## TMF API Reference: TMF 632 - Party Management Extension
+    This extension adds the lastUpdate field to Individual entities to track modification timestamps.'
+  version: 4.0.0
+tags:
+- name: individual
+paths: {}
+components:
+  schemas:
+    Individual:
+      type: object
+      description: Individual represents a single human being (a man, woman or child). The individual can be a customer, an employee or any other person that the organization needs to store information about.
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the individual
+        href:
+          type: string
+          description: Reference of the individual
+        aristocraticTitle:
+          type: string
+          description: e.g. Baron, Graf, Earl
+        birthDate:
+          type: string
+          format: date-time
+          description: Birth date
+        countryOfBirth:
+          type: string
+          description: Country where the individual was born
+        deathDate:
+          type: string
+          format: date-time
+          description: Date of death
+        familyName:
+          type: string
+          description: Contains the non-chosen or inherited name. Also known as last name in the Western context
+        familyNamePrefix:
+          type: string
+          description: Family name prefix
+        formattedName:
+          type: string
+          description: A fully formatted name in one string with all of its pieces in their proper place and all of the necessary punctuation. Useful for specific contexts (Chinese, Japanese, Korean)
+        fullName:
+          type: string
+          description: Full name flatten (first, middle, and last names)
+        gender:
+          type: string
+          description: Gender
+        generation:
+          type: string
+          description: e.g. Sr, Jr, III (the third)
+        givenName:
+          type: string
+          description: First name of the individual
+        lastUpdate:
+          type: string
+          format: date-time
+          description: Date and time of the last update
+        legalName:
+          type: string
+          description: Legal name or birth name (name one has for official purposes)
+        location:
+          type: string
+          description: Temporary current location of the individual (may be used if the individual has no contact medium)
+        maritalStatus:
+          type: string
+          description: Marital status (married, unmarried, divorced)
+        middleName:
+          type: string
+          description: Middles name or initial
+        nationality:
+          type: string
+          description: Nationality
+        placeOfBirth:
+          type: string
+          description: Reference to the place where the individual was born
+        preferredGivenName:
+          type: string
+          description: Contains the chosen name by which the individual prefers to be addressed. Note- This name may be a name other than a given name, such as a nickname
+        title:
+          type: string
+          description: Useful for titles (aristocratic, social,...) Pr, Dr, Sir, ...
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          format: uri
+          description: A URI to a JSON-Schema file that defines additional attributes and relationships
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
+    Individual_Create:
+      type: object
+      description: 'Individual represents a single human being (a man, woman or child). The individual can be a customer, an employee or any other person that the organization needs to store information about.Skipped properties: id,href,lastUpdate'
+      properties:
+        aristocraticTitle:
+          type: string
+          description: e.g. Baron, Graf, Earl
+        birthDate:
+          type: string
+          format: date-time
+          description: Birth date
+        countryOfBirth:
+          type: string
+          description: Country where the individual was born
+        deathDate:
+          type: string
+          format: date-time
+          description: Date of death
+        familyName:
+          type: string
+          description: Contains the non-chosen or inherited name. Also known as last name in the Western context
+        familyNamePrefix:
+          type: string
+          description: Family name prefix
+        formattedName:
+          type: string
+          description: A fully formatted name in one string with all of its pieces in their proper place and all of the necessary punctuation. Useful for specific contexts (Chinese, Japanese, Korean)
+        fullName:
+          type: string
+          description: Full name flatten (first, middle, and last names)
+        gender:
+          type: string
+          description: Gender
+        generation:
+          type: string
+          description: e.g. Sr, Jr, III (the third)
+        givenName:
+          type: string
+          description: First name of the individual
+        lastUpdate:
+          type: string
+          format: date-time
+          description: Date and time of the last update
+        legalName:
+          type: string
+          description: Legal name or birth name (name one has for official purposes)
+        location:
+          type: string
+          description: Temporary current location of the individual (may be used if the individual has no contact medium)
+        maritalStatus:
+          type: string
+          description: Marital status (married, unmarried, divorced)
+        middleName:
+          type: string
+          description: Middles name or initial
+        nationality:
+          type: string
+          description: Nationality
+        placeOfBirth:
+          type: string
+          description: Reference to the place where the individual was born
+        preferredGivenName:
+          type: string
+          description: Contains the chosen name by which the individual prefers to be addressed. Note- This name may be a name other than a given name, such as a nickname
+        title:
+          type: string
+          description: Useful for titles (aristocratic, social,...) Pr, Dr, Sir, ...
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          format: uri
+          description: A URI to a JSON-Schema file that defines additional attributes and relationships
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
+    Individual_Update:
+      type: object
+      description: 'Individual represents a single human being (a man, woman or child). The individual can be a customer, an employee or any other person that the organization needs to store information about.Skipped properties: id,href,lastUpdate'
+      properties:
+        aristocraticTitle:
+          type: string
+          description: e.g. Baron, Graf, Earl
+        birthDate:
+          type: string
+          format: date-time
+          description: Birth date
+        countryOfBirth:
+          type: string
+          description: Country where the individual was born
+        deathDate:
+          type: string
+          format: date-time
+          description: Date of death
+        familyName:
+          type: string
+          description: Contains the non-chosen or inherited name. Also known as last name in the Western context
+        familyNamePrefix:
+          type: string
+          description: Family name prefix
+        formattedName:
+          type: string
+          description: A fully formatted name in one string with all of its pieces in their proper place and all of the necessary punctuation. Useful for specific contexts (Chinese, Japanese, Korean)
+        fullName:
+          type: string
+          description: Full name flatten (first, middle, and last names)
+        gender:
+          type: string
+          description: Gender
+        generation:
+          type: string
+          description: e.g. Sr, Jr, III (the third)
+        givenName:
+          type: string
+          description: First name of the individual
+        lastUpdate:
+          type: string
+          format: date-time
+          description: Date and time of the last update
+        legalName:
+          type: string
+          description: Legal name or birth name (name one has for official purposes)
+        location:
+          type: string
+          description: Temporary current location of the individual (may be used if the individual has no contact medium)
+        maritalStatus:
+          type: string
+          description: Marital status (married, unmarried, divorced)
+        middleName:
+          type: string
+          description: Middles name or initial
+        nationality:
+          type: string
+          description: Nationality
+        placeOfBirth:
+          type: string
+          description: Reference to the place where the individual was born
+        preferredGivenName:
+          type: string
+          description: Contains the chosen name by which the individual prefers to be addressed. Note- This name may be a name other than a given name, such as a nickname
+        title:
+          type: string
+          description: Useful for titles (aristocratic, social,...) Pr, Dr, Sir, ...
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          format: uri
+          description: A URI to a JSON-Schema file that defines additional attributes and relationships
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class entity name

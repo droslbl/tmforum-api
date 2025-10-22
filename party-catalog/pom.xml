@@ -184,6 +184,38 @@
                     <apiPackage>org.fiware.party.api</apiPackage>
                     <modelPackage>org.fiware.party.model</modelPackage>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>openapi-individual-extension</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <skip>false</skip>
+                            <inputSpec>
+                                ${project.parent.basedir}/${artifactId}/api/individual-extension.yaml
+                            </inputSpec>
+                            <apiPackage>org.fiware.party.api.ext</apiPackage>
+                            <modelPackage>org.fiware.party.model</modelPackage>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>openapi-organization-extension</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <skip>false</skip>
+                            <inputSpec>
+                                ${project.parent.basedir}/${artifactId}/api/organization-extension.yaml
+                            </inputSpec>
+                            <apiPackage>org.fiware.party.api.ext</apiPackage>
+                            <modelPackage>org.fiware.party.model</modelPackage>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <!-- add generated sources -->
             <plugin>
