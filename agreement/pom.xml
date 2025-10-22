@@ -106,6 +106,12 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>0.2.6</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>io.micronaut.reactor</groupId>
             <artifactId>micronaut-reactor</artifactId>
             <scope>compile</scope>
@@ -215,7 +221,30 @@
                     <inputSpec>${tmforum.api.url}</inputSpec>
                     <apiPackage>org.fiware.agreement.api</apiPackage>
                     <modelPackage>org.fiware.agreement.model</modelPackage>
+                    <configOptions>
+                        <jacksonDatabindNullable>false</jacksonDatabindNullable>
+                    </configOptions>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>openapi-agreement-api-extension</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <skip>false</skip>
+                            <inputSpec>
+                                ${project.parent.basedir}/${artifactId}/api/agreement-extension.yaml
+                            </inputSpec>
+                            <apiPackage>org.fiware.agreement.api.ext</apiPackage>
+                            <modelPackage>org.fiware.agreement.model</modelPackage>
+                            <configOptions>
+                                <jacksonDatabindNullable>false</jacksonDatabindNullable>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <!-- add generated sources -->
             <plugin>

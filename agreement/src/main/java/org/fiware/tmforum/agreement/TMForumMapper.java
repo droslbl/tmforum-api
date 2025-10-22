@@ -11,6 +11,7 @@ import org.fiware.tmforum.common.mapping.IdHelper;
 import org.fiware.tmforum.product.Characteristic;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.openapitools.jackson.nullable.JsonNullable;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -93,6 +94,21 @@ public abstract class TMForumMapper extends BaseMapper {
 			return null;
 		}
 		return value.toString();
+	}
+
+	// JsonNullable mapping methods
+	public JsonNullable<Object> objectToJsonNullable(Object value) {
+		if (value == null) {
+			return JsonNullable.undefined();
+		}
+		return JsonNullable.of(value);
+	}
+
+	public Object jsonNullableToObject(JsonNullable<Object> value) {
+		if (value == null || !value.isPresent()) {
+			return null;
+		}
+		return value.get();
 	}
 
 }
