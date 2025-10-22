@@ -111,7 +111,9 @@ public class AgreementSpecificationApiIT extends AbstractApiIT implements Agreem
 				() -> agSpecApiTestClient.createAgreementSpecification(null, agSpecCreateVO));
 		assertEquals(HttpStatus.CREATED, agSpecCreateResponse.getStatus(), message);
 		String id = agSpecCreateResponse.body().getId();
+		Instant lastUpdate = agSpecCreateResponse.body().getLastUpdate();
 		expectedAgSpec.id(id).href(id);
+		expectedAgSpec.setLastUpdate(lastUpdate);
 		assertEquals(expectedAgSpec, agSpecCreateResponse.body(), message);
 	}
 
@@ -288,7 +290,8 @@ public class AgreementSpecificationApiIT extends AbstractApiIT implements Agreem
 			createAgSpec = AgreementSpecificationCreateVOTestExample.build().atSchemaLocation(null)
 					.serviceCategory(null);
 			createAgSpecResponse = agSpecApiTestClient.createAgreementSpecification(null, createAgSpec);
-			expectedAgSpec.add(createAgSpecResponse.body());
+			AgreementSpecificationVO body = createAgSpecResponse.body();
+			expectedAgSpec.add(body);
 		}
 		HttpResponse<List<AgreementSpecificationVO>> listResponse = callAndCatch(
 				() -> agSpecApiTestClient.listAgreementSpecification(null, null, null, null));
@@ -410,6 +413,7 @@ public class AgreementSpecificationApiIT extends AbstractApiIT implements Agreem
 		HttpResponse<AgreementSpecificationVO> agSpecCreateResponse = callAndCatch(
 				() -> agSpecApiTestClient.createAgreementSpecification(null, agSpecCreate));
 		String id = agSpecCreateResponse.body().getId();
+		Instant lastUpdate = agSpecCreateResponse.body().getLastUpdate();
 		assertEquals(HttpStatus.CREATED, agSpecCreateResponse.getStatus(),
 				"An agreeement specification should have been created firstly");
 		HttpResponse<AgreementSpecificationVO> updateAgSpecResponse = callAndCatch(
@@ -417,6 +421,7 @@ public class AgreementSpecificationApiIT extends AbstractApiIT implements Agreem
 		assertEquals(HttpStatus.OK, updateAgSpecResponse.getStatus(), message);
 		AgreementSpecificationVO updatedAgSpec = updateAgSpecResponse.body();
 		expectedAgSpec.id(id).href(id);
+		expectedAgSpec.setLastUpdate(updatedAgSpec.getLastUpdate());
 		assertEquals(expectedAgSpec, updatedAgSpec, message);
 	}
 
@@ -535,9 +540,11 @@ public class AgreementSpecificationApiIT extends AbstractApiIT implements Agreem
 		HttpResponse<AgreementSpecificationVO> agSpecCreateResponse = callAndCatch(
 				() -> agSpecApiTestClient.createAgreementSpecification(null, agSpecCreate));
 		String id = agSpecCreateResponse.body().getId();
+		Instant lastUpdate = agSpecCreateResponse.body().getLastUpdate();
 		assertEquals(HttpStatus.CREATED, agSpecCreateResponse.getStatus(),
 				"An agreeement specification should have been created firstly");
 		expectedAgSpec.id(id).href(id);
+		expectedAgSpec.setLastUpdate(lastUpdate);
 
 		HttpResponse<AgreementSpecificationVO> retrieveResponse = callAndCatch(
 				() -> agSpecApiTestClient.retrieveAgreementSpecification(null, id, fields));
