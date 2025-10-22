@@ -81,8 +81,11 @@ public class ProductApiIT extends AbstractApiIT implements ProductApiTestSpec {
 				() -> productApiTestClient.createProduct(null, productCreateVO));
 		assertEquals(HttpStatus.CREATED, productVOHttpResponse.getStatus(), message);
 		String rfId = productVOHttpResponse.body().getId();
+		Instant lastUpdate = productVOHttpResponse.body().getLastUpdate();
 		expectedProduct.setId(rfId);
 		expectedProduct.setHref(rfId);
+
+		expectedProduct.setLastUpdate(lastUpdate);
 
 		assertEquals(expectedProduct, productVOHttpResponse.body(), message);
 	}
@@ -523,8 +526,10 @@ public class ProductApiIT extends AbstractApiIT implements ProductApiTestSpec {
 					.productSpecification(null)
 					.billingAccount(null)
 					.productOffering(null);
-			String id = productApiTestClient.createProduct(null, productCreateVO)
-					.body().getId();
+			ProductVO body = productApiTestClient.createProduct(null, productCreateVO)
+					.body();
+			String id = body.getId();
+			Instant lastUpdate = body.getLastUpdate();
 			ProductVO productVO = ProductVOTestExample.build().atSchemaLocation(null);
 			productVO
 					.id(id)
@@ -535,6 +540,7 @@ public class ProductApiIT extends AbstractApiIT implements ProductApiTestSpec {
 					.agreement(null)
 					.product(null)
 					.place(null)
+					.lastUpdate(lastUpdate)
 					.relatedParty(null)
 					.productOrderItem(null)
 					.realizingResource(null)
@@ -676,6 +682,7 @@ public class ProductApiIT extends AbstractApiIT implements ProductApiTestSpec {
 				"The product function should have been created first.");
 
 		String productId = createResponse.body().getId();
+		Instant lastUpdate = createResponse.body().getLastUpdate();
 
 		HttpResponse<ProductVO> updateResponse = callAndCatch(
 				() -> productApiTestClient.patchProduct(null, productId, productUpdateVO));
@@ -683,6 +690,7 @@ public class ProductApiIT extends AbstractApiIT implements ProductApiTestSpec {
 
 		ProductVO updatedProduct = updateResponse.body();
 		expectedProduct.href(productId).id(productId);
+		expectedProduct.setLastUpdate(updatedProduct.getLastUpdate());
 
 		assertEquals(expectedProduct, updatedProduct, message);
 	}
@@ -1225,9 +1233,11 @@ public class ProductApiIT extends AbstractApiIT implements ProductApiTestSpec {
 				() -> productApiTestClient.createProduct(null, productCreateVO));
 		assertEquals(HttpStatus.CREATED, createResponse.getStatus(), message);
 		String id = createResponse.body().getId();
+		Instant lastUpdate = createResponse.body().getLastUpdate();
 
 		expectedProduct
 				.id(id)
+				.lastUpdate(lastUpdate)
 				.href(id);
 
 		//then retrieve

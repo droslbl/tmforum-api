@@ -94,9 +94,11 @@ public class ProductOrderingApiIT extends AbstractApiIT implements ProductOrderA
 				() -> productOrderApiTestClient.createProductOrder(null, productCreateVO));
 		assertEquals(HttpStatus.CREATED, productVOHttpResponse.getStatus(), message);
 		String rfId = productVOHttpResponse.body().getId();
+		Instant lastUpdate = productVOHttpResponse.body().getLastUpdate();
 		expectedProduct.setId(rfId);
 		expectedProduct.setHref(rfId);
 		expectedProduct.setOrderDate(now);
+		expectedProduct.setLastUpdate(lastUpdate);
 		assertEquals(expectedProduct, productVOHttpResponse.body(), message);
 	}
 
@@ -635,8 +637,10 @@ public class ProductOrderingApiIT extends AbstractApiIT implements ProductOrderA
 			ProductOrderCreateVO productCreateVO = ProductOrderCreateVOTestExample.build().atSchemaLocation(null)
 					.billingAccount(null);
 
-			String id = productOrderApiTestClient.createProductOrder(null, productCreateVO)
-					.body().getId();
+			ProductOrderVO body = productOrderApiTestClient.createProductOrder(null, productCreateVO)
+					.body();
+			String id = body.getId();
+			Instant lastUpdate = body.getLastUpdate();
 			ProductOrderVO productOrderVO = ProductOrderVOTestExample.build().atSchemaLocation(null);
 			productOrderVO
 					.id(id)
@@ -647,7 +651,8 @@ public class ProductOrderingApiIT extends AbstractApiIT implements ProductOrderA
 					.payment(null)
 					.quote(null)
 					.channel(null)
-					.orderDate(now);
+					.orderDate(now)
+					.lastUpdate(lastUpdate);
 			expectedProducts.add(productOrderVO);
 		}
 
@@ -784,6 +789,7 @@ public class ProductOrderingApiIT extends AbstractApiIT implements ProductOrderA
 				"The product function should have been created first.");
 
 		String productId = createResponse.body().getId();
+		Instant lastUpdate = createResponse.body().getLastUpdate();
 
 		HttpResponse<ProductOrderVO> updateResponse = callAndCatch(
 				() -> productOrderApiTestClient.patchProductOrder(null, productId, productUpdateVO));
@@ -791,6 +797,7 @@ public class ProductOrderingApiIT extends AbstractApiIT implements ProductOrderA
 
 		ProductOrderVO updatedProduct = updateResponse.body();
 		expectedProduct.href(productId).id(productId).orderDate(now);
+		expectedProduct.setLastUpdate(updatedProduct.getLastUpdate());
 
 		assertEquals(expectedProduct, updatedProduct, message);
 	}
@@ -1393,9 +1400,11 @@ public class ProductOrderingApiIT extends AbstractApiIT implements ProductOrderA
 				() -> productOrderApiTestClient.createProductOrder(null, productCreateVO));
 		assertEquals(HttpStatus.CREATED, createResponse.getStatus(), message);
 		String id = createResponse.body().getId();
+		Instant lastUpdate = createResponse.body().getLastUpdate();
 
 		expectedProduct
 				.id(id)
+				.lastUpdate(lastUpdate)
 				.href(id);
 
 		//then retrieve
