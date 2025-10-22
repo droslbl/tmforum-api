@@ -1,0 +1,102 @@
+openapi: 3.0.3
+info:
+  title: PartyRole Extension
+  description: '## TMF API Reference: TMF 669 - Party Role Management Extension
+    This extension adds the lastUpdate field to PartyRole entities to track modification timestamps.'
+  version: 4.0.0
+tags:
+- name: partyRole
+paths: {}
+components:
+  schemas:
+    PartyRole:
+      type: object
+      description: The part played by a party in a given context.
+      required:
+      - name
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the party role
+        href:
+          type: string
+          description: Reference of the party role
+        lastUpdate:
+          type: string
+          format: date-time
+          description: Date and time of the last update
+        name:
+          type: string
+          description: A word, term, or phrase by which the PartyRole is known and distinguished from other PartyRoles.
+        status:
+          type: string
+          description: Used to track the lifecycle status of the party role.
+        statusReason:
+          type: string
+          description: A string providing an explanation on the value of the status lifecycle. For instance if the status is Rejected, statusReason will provide the reason for rejection.
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          format: uri
+          description: A URI to a JSON-Schema file that defines additional attributes and relationships
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
+    PartyRole_Create:
+      type: object
+      description: 'The part played by a party in a given context.Skipped properties: id,href,lastUpdate'
+      required:
+      - name
+      properties:
+        lastUpdate:
+          type: string
+          format: date-time
+          description: Date and time of the last update
+        name:
+          type: string
+          description: A word, term, or phrase by which the PartyRole is known and distinguished from other PartyRoles.
+        status:
+          type: string
+          description: Used to track the lifecycle status of the party role.
+        statusReason:
+          type: string
+          description: A string providing an explanation on the value of the status lifecycle. For instance if the status is Rejected, statusReason will provide the reason for rejection.
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          format: uri
+          description: A URI to a JSON-Schema file that defines additional attributes and relationships
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
+    PartyRole_Update:
+      type: object
+      description: 'The part played by a party in a given context.Skipped properties: id,href,lastUpdate'
+      properties:
+        lastUpdate:
+          type: string
+          format: date-time
+          description: Date and time of the last update
+        name:
+          type: string
+          description: A word, term, or phrase by which the PartyRole is known and distinguished from other PartyRoles.
+        status:
+          type: string
+          description: Used to track the lifecycle status of the party role.
+        statusReason:
+          type: string
+          description: A string providing an explanation on the value of the status lifecycle. For instance if the status is Rejected, statusReason will provide the reason for rejection.
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          format: uri
+          description: A URI to a JSON-Schema file that defines additional attributes and relationships
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
