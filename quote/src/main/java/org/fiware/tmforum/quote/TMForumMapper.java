@@ -69,10 +69,16 @@ public abstract class TMForumMapper extends BaseMapper {
 	public abstract CharacteristicVO map(Characteristic characteristic);
 
 	public String mapQuoteItemState(QuoteItemState value) {
+		if (value == null) {
+			return null;
+		}
 		return value.getValue();
 	}
 
 	public QuoteItemState mapQuoteItemState(String value) {
+		if (value == null) {
+			return null;
+		}
 		return QuoteItemState.toEnum(value);
 	}
 
