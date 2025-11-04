@@ -1,12 +1,13 @@
 package org.fiware.tmforum.service;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.fiware.tmforum.common.domain.Entity;
 import org.fiware.tmforum.common.domain.TimePeriod;
 
-import java.net.URI;
-
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class CharacteristicValueSpecification {
+public class CharacteristicValueSpecification extends Entity {
 
     private Boolean isDefault;
     private String rangeInterval;
@@ -17,7 +18,4 @@ public class CharacteristicValueSpecification {
     private String valueType;
     private TimePeriod validFor;
     private Object tmfValue;
-    private String atBaseType;
-    private URI atSchemaLocation;
-    private String atType;
 }
