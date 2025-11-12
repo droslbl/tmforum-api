@@ -1,5 +1,7 @@
 package org.fiware.tmforum.common.domain;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.github.wistefan.mapping.UnmappedProperty;
 import io.github.wistefan.mapping.annotations.*;
@@ -10,7 +12,10 @@ import lombok.Setter;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Abstract super class for all entities to be created
@@ -54,6 +59,7 @@ public abstract class Entity {
 		return "default";
 	}
 
+	@JsonIgnore
 	@Setter(onMethod = @__({@UnmappedPropertiesSetter}))
 	@Getter(onMethod = @__({@UnmappedPropertiesGetter}))
 	private List<UnmappedProperty> additionalProperties;
@@ -64,6 +70,36 @@ public abstract class Entity {
 			this.additionalProperties = new ArrayList<>();
 		}
 		this.additionalProperties.add(ap);
+	}
+
+	/**
+	 * Support for Jackson JSON serialization when entity is nested in PROPERTY_LIST
+	 * Converts additionalProperties to a Map for @JsonAnyGetter
+	 * Excludes @baseType, @schemaLocation, and @type as they have explicit getters
+	 */
+	@JsonAnyGetter
+	public Map<String, Object> getAdditionalPropertiesAsMap() {
+		if (this.additionalProperties == null || this.additionalProperties.isEmpty()) {
+			return new HashMap<>();
+		}
+		return this.additionalProperties.stream()
+				.filter(prop -> !prop.getName().equals("atBaseType")
+						&& !prop.getName().equals("atSchemaLocation")
+						&& !prop.getName().equals("atType"))
+				.collect(Collectors.toMap(
+						UnmappedProperty::getName,
+						UnmappedProperty::getValue,
+						(existing, replacement) -> replacement
+				));
+	}
+
+	/**
+	 * Support for Jackson JSON deserialization when entity is nested in PROPERTY_LIST
+	 * Converts Map entries to additionalProperties for @JsonAnySetter
+	 */
+	@JsonAnySetter
+	public void setAdditionalPropertyFromJson(String key, Object value) {
+		addAdditionalProperties(key, value);
 	}
 
 }
