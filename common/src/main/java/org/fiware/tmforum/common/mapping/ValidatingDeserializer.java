@@ -50,12 +50,16 @@ public class ValidatingDeserializer extends DelegatingDeserializer {
 		if (targetObject instanceof UnknownPreservingBase upb) {
 			if (upb.getAtSchemaLocation() != null) {
 				validateWithSchema(upb.getAtSchemaLocation(), tokenBuffer.asParserOnFirstToken().readValueAsTree().toString());
+			} else if (upb.getUnknownProperties() != null && !upb.getUnknownProperties().isEmpty()) {
+				// Only enforce strict validation on top-level request objects (CreateVO, UpdateVO)
+				// Nested objects without @schemaLocation are allowed to have unknown properties
+				// as they will be validated as part of the parent schema
+				String className = beanDescription.getBeanClass().getSimpleName();
+				if (className.endsWith("CreateVO") || className.endsWith("UpdateVO")) {
+					throw new SchemaValidationException(List.of(), "If no schema is provided, no additional properties are allowed.");
+				}
+				// For nested objects, allow unknown properties (they're validated as part of parent schema)
 			}
-			// Allow unknown properties on nested objects - they will be validated as part of parent schema
-			// The BaseMapper will only transfer unknown properties to domain entities when @schemaLocation is present
-			// else if (upb.getUnknownProperties() != null && !upb.getUnknownProperties().isEmpty()) {
-			// 	throw new SchemaValidationException(List.of(), "If no schema is provided, no additional properties are allowed.");
-			// }
 		}
 		return targetObject;
 	}
