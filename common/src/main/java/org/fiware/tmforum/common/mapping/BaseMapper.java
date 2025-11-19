@@ -29,11 +29,10 @@ public abstract class BaseMapper {
 
 	@AfterMapping
 	public void afterMappingToEntity(UnknownPreservingBase source, @MappingTarget Entity e) {
-		// Transfer unknown properties to domain entity
-		// Validation already happened at deserializer level
+
 		if (source.getUnknownProperties() != null) {
 			source.getUnknownProperties().forEach(e::addAdditionalProperties);
-			// Preserve schema location if present for later use
+
 			if (source.getAtSchemaLocation() != null) {
 				e.setAtSchemaLocation(source.getAtSchemaLocation());
 			}
