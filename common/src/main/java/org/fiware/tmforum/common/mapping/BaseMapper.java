@@ -29,48 +29,65 @@ public abstract class BaseMapper {
 
 	@AfterMapping
 	public void afterMappingToEntity(UnknownPreservingBase source, @MappingTarget Entity e) {
-		if (source.getAtSchemaLocation() != null && source.getUnknownProperties() != null) {
+		// Transfer unknown properties to domain entity
+		// Validation already happened at deserializer level
+		if (source.getUnknownProperties() != null) {
 			source.getUnknownProperties().forEach(e::addAdditionalProperties);
+			// Preserve schema location if present for later use
+			if (source.getAtSchemaLocation() != null) {
+				e.setAtSchemaLocation(source.getAtSchemaLocation());
+			}
 		}
 	}
 
 	@AfterMapping
 	public void afterMappingFromEntity(Entity source, @MappingTarget UnknownPreservingBase target) {
-		if (source.getAtSchemaLocation() != null && source.getAdditionalProperties() != null) {
-			try {
+		if (source.getAdditionalProperties() != null) {
+			if (source.getAtSchemaLocation() != null) {
+				// If schema is present, use it to determine array handling
+				try {
+					JsonSchemaFactory jsonSchemaFactory = JsonSchemaFactory.getInstance(
+							SpecVersion.VersionFlag.V202012,
+							builder -> builder.schemaLoaders(sb -> {
+								sb.add(new ClasspathSchemaLoader());
+								sb.add(new UriSchemaLoader());
+							})
+					);
 
-				JsonSchemaFactory jsonSchemaFactory = JsonSchemaFactory.getInstance(
-						SpecVersion.VersionFlag.V202012,
-						builder -> builder.schemaLoaders(sb -> {
-							sb.add(new ClasspathSchemaLoader());
-							sb.add(new UriSchemaLoader());
-						})
-				);
+					SchemaValidatorsConfig.Builder validatorConfigBuilder = SchemaValidatorsConfig.builder();
+					SchemaValidatorsConfig schemaValidatorsConfig = validatorConfigBuilder.build();
+					JsonSchema schema = jsonSchemaFactory.getSchema(SchemaLocation.of(source.getAtSchemaLocation().toString()), schemaValidatorsConfig);
+					var propertiesNode = schema.getSchemaNode().get(PROPERTIES_KEY);
 
-				SchemaValidatorsConfig.Builder validatorConfigBuilder = SchemaValidatorsConfig.builder();
-				SchemaValidatorsConfig schemaValidatorsConfig = validatorConfigBuilder.build();
-				JsonSchema schema = jsonSchemaFactory.getSchema(SchemaLocation.of(source.getAtSchemaLocation().toString()), schemaValidatorsConfig);
-				var propertiesNode = schema.getSchemaNode().get(PROPERTIES_KEY);
-
+					source.getAdditionalProperties()
+							.forEach(additionalProperty -> {
+								if (!(additionalProperty.getValue() instanceof List) && isArray(additionalProperty.getName(), propertiesNode) && additionalProperty.getValue() != null) {
+									// since json-ld flattens single element lists to plain objects, we have rebuild them to single element lists if the schema requires it.
+									target.setUnknownProperties(additionalProperty.getName(), List.of(additionalProperty.getValue()));
+								} else {
+									target.setUnknownProperties(additionalProperty.getName(), additionalProperty.getValue());
+								}
+							});
+					// Preserve schema location
+					target.setUnknownProperties("@schemaLocation", source.getAtSchemaLocation());
+				} catch (Exception e) {
+					log.warn("Was not able to get the schema. Will not apply special handling.", e);
+					source.getAdditionalProperties()
+							.forEach(additionalProperty -> target.setUnknownProperties(additionalProperty.getName(), additionalProperty.getValue()));
+					target.setUnknownProperties("@schemaLocation", source.getAtSchemaLocation());
+				}
+			} else {
+				// No schema, just transfer properties as-is
 				source.getAdditionalProperties()
-						.forEach(additionalProperty -> {
-							if (!(additionalProperty.getValue() instanceof List) && isArray(additionalProperty.getName(), propertiesNode) && additionalProperty.getValue() != null) {
-								// since json-ld flattens single element lists to plain objects, we have rebuild them to single element lists if the schema requires it.
-								target.setUnknownProperties(additionalProperty.getName(), List.of(additionalProperty.getValue()));
-							} else {
-								target.setUnknownProperties(additionalProperty.getName(), additionalProperty.getValue());
-							}
-						});
-			} catch (Exception e) {
-				log.warn("Was not able to get the schema. Will not apply special handling.", e);
-				source.getAdditionalProperties()
-						.forEach(additionalProperty -> target.setUnknownProperties(additionalProperty.getName(), additionalProperty.getValue()))
-				;
+						.forEach(additionalProperty -> target.setUnknownProperties(additionalProperty.getName(), additionalProperty.getValue()));
 			}
 		}
 	}
 
 	private static boolean isArray(String propertyName, JsonNode properties) {
+		if (properties == null) {
+			return false;
+		}
 		return Optional.ofNullable(properties.get(propertyName))
 				.map(node -> node.get(TYPE_KEY))
 				.filter(TextNode.class::isInstance)
