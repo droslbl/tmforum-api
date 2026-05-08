@@ -12,9 +12,11 @@ import org.fiware.document.model.DocumentSpecificationCreateVO;
 import org.fiware.document.model.DocumentSpecificationStatusTypeVO;
 import org.fiware.document.model.DocumentSpecificationUpdateVO;
 import org.fiware.document.model.DocumentSpecificationVO;
+import org.fiware.document.model.RelatedPartyVO;
 import org.fiware.ngsi.api.EntitiesApiClient;
 import org.fiware.tmforum.common.configuration.GeneralProperties;
 import org.fiware.tmforum.common.exception.ErrorDetails;
+import org.fiware.tmforum.common.domain.AttachmentRefOrValue;
 import org.fiware.tmforum.common.notification.TMForumEventHandler;
 import org.fiware.tmforum.common.test.AbstractApiIT;
 import org.fiware.tmforum.documentmanagement.domain.DocumentSpecification;
@@ -66,6 +68,16 @@ public class DocumentSpecificationApiIT extends AbstractApiIT implements Documen
         when(eventHandler.handleCreateEvent(any())).thenReturn(Mono.empty());
         when(eventHandler.handleUpdateEvent(any(), any())).thenReturn(Mono.empty());
         return eventHandler;
+    }
+
+    @MockBean(AttachmentService.class)
+    public AttachmentService attachmentService() {
+        AttachmentService attachmentService = mock(AttachmentService.class);
+        when(attachmentService.offloadAttachments(any(), any())).thenAnswer(i -> Mono.just(i.getArgument(0)));
+        when(attachmentService.resolveAttachments(any())).thenAnswer(i -> Mono.just(i.getArgument(0)));
+        when(attachmentService.deleteAttachments(any())).thenReturn(Mono.empty());
+        when(attachmentService.deleteOrphanedAttachments(any(), any())).thenReturn(Mono.empty());
+        return attachmentService;
     }
 
     @ParameterizedTest
@@ -148,7 +160,7 @@ public class DocumentSpecificationApiIT extends AbstractApiIT implements Documen
     }
 
     @Test
-    public void createDocumentSpecificationWithInlineContent400() throws Exception {
+    public void createDocumentSpecificationWithInlineContent201() throws Exception {
         DocumentSpecificationCreateVO createVO = new DocumentSpecificationCreateVO();
         createVO.setName("Document with Inline Content");
 
@@ -160,8 +172,8 @@ public class DocumentSpecificationApiIT extends AbstractApiIT implements Documen
         HttpResponse<DocumentSpecificationVO> response = callAndCatch(
                 () -> documentSpecificationApiTestClient.createDocumentSpecification(null, createVO));
 
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatus(),
-                "Inline content should be rejected when no AttachmentService is configured.");
+        assertEquals(HttpStatus.CREATED, response.getStatus(),
+                "Inline content should be accepted when an AttachmentService is configured.");
     }
 
     @Test
@@ -407,15 +419,15 @@ public class DocumentSpecificationApiIT extends AbstractApiIT implements Documen
         assertEquals(HttpStatus.CREATED, createResponse.getStatus());
         String id = createResponse.body().getId();
 
-        AttachmentRefOrValueVO attachment = new AttachmentRefOrValueVO();
-        attachment.setContent(Base64.getEncoder().encodeToString("data".getBytes()));
+        RelatedPartyVO nonExistentParty = new RelatedPartyVO();
+        nonExistentParty.setId("urn:ngsi-ld:organization:non-existent");
         DocumentSpecificationUpdateVO updateVO = new DocumentSpecificationUpdateVO();
-        updateVO.setAttachment(List.of(attachment));
+        updateVO.setRelatedParty(List.of(nonExistentParty));
         HttpResponse<DocumentSpecificationVO> response = callAndCatch(
                 () -> documentSpecificationApiTestClient.patchDocumentSpecification(null, id, updateVO));
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatus(),
-                "Inline content in patch should be rejected when no AttachmentService is configured.");
+                "Patch with a non-existent relatedParty reference should fail with 400.");
     }
 
     @Disabled("Security is handled externally, thus 401 and 403 cannot happen.")
