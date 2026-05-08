@@ -73,8 +73,14 @@ public class DocumentSpecificationApiIT extends AbstractApiIT implements Documen
     @MockBean(AttachmentService.class)
     public AttachmentService attachmentService() {
         AttachmentService attachmentService = mock(AttachmentService.class);
-        when(attachmentService.offloadAttachments(any(), any())).thenAnswer(i -> Mono.just(i.getArgument(0)));
-        when(attachmentService.resolveAttachments(any())).thenAnswer(i -> Mono.just(i.getArgument(0)));
+        when(attachmentService.offloadAttachments(any(), any())).thenAnswer(i -> {
+            List<AttachmentRefOrValue> list = i.getArgument(0);
+            return list == null ? Mono.empty() : Mono.just(list);
+        });
+        when(attachmentService.resolveAttachments(any())).thenAnswer(i -> {
+            List<AttachmentRefOrValue> list = i.getArgument(0);
+            return list == null ? Mono.empty() : Mono.just(list);
+        });
         when(attachmentService.deleteAttachments(any())).thenReturn(Mono.empty());
         when(attachmentService.deleteOrphanedAttachments(any(), any())).thenReturn(Mono.empty());
         return attachmentService;
