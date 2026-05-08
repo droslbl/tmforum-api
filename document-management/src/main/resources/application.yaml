@@ -51,6 +51,7 @@ s3:
   #   MinIO (local/k3s):  endpoint: "http://localhost:9000"
   #   AWS S3:             endpoint: "https://s3.amazonaws.com",  region: "us-east-1"
   #   IONOS:              endpoint: "https://s3-eu-central-1.ionoscloud.com"
+  enabled: false
   endpoint: "http://localhost:9000"
   accessKey: "minioadmin"
   secretKey: "minioadmin"
