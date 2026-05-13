@@ -134,7 +134,14 @@ public class DocumentSpecificationApiController extends AbstractApiController<Do
 
         if (attachmentService == null) {
             rejectInlineContent(newAttachments);
-            return patch(id, updatedSpec, getCheckingMono(updatedSpec), DocumentSpecification.class)
+            return retrieve(id, DocumentSpecification.class)
+                    .flatMap(existing -> {
+                        if (updatedSpec.getAtSchemaLocation() == null) {
+                            updatedSpec.setAtSchemaLocation(existing.getAtSchemaLocation());
+                        }
+                        return patch(id, updatedSpec, getCheckingMono(updatedSpec), DocumentSpecification.class);
+                    })
+                    .switchIfEmpty(Mono.defer(() -> patch(id, updatedSpec, getCheckingMono(updatedSpec), DocumentSpecification.class)))
                     .map(tmForumMapper::map)
                     .map(HttpResponse::ok);
         }
@@ -145,6 +152,9 @@ public class DocumentSpecificationApiController extends AbstractApiController<Do
 
         return retrieve(id, DocumentSpecification.class)
                 .flatMap(existing -> {
+                    if (updatedSpec.getAtSchemaLocation() == null) {
+                        updatedSpec.setAtSchemaLocation(existing.getAtSchemaLocation());
+                    }
                     if (newAttachments == null || newAttachments.isEmpty()) {
                         return Mono.just(updatedSpec);
                     }
